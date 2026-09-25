@@ -49,7 +49,7 @@ public final class ProjectDao_Impl implements ProjectDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `project` (`id`,`name`,`boss`,`work_type`,`unit_price`,`overtime_price`,`note`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `project` (`id`,`name`,`boss`,`work_type`,`unit_price`,`overtime_price`,`hour_per_work`,`note`) VALUES (nullif(?, 0),?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -84,10 +84,16 @@ public final class ProjectDao_Impl implements ProjectDao {
         } else {
           statement.bindString(6, _tmp_2);
         }
-        if (entity.getNote() == null) {
+        final String _tmp_3 = __converters.bigDecimalToString(entity.getHourPerWork());
+        if (_tmp_3 == null) {
           statement.bindNull(7);
         } else {
-          statement.bindString(7, entity.getNote());
+          statement.bindString(7, _tmp_3);
+        }
+        if (entity.getNote() == null) {
+          statement.bindNull(8);
+        } else {
+          statement.bindString(8, entity.getNote());
         }
       }
     };
@@ -108,7 +114,7 @@ public final class ProjectDao_Impl implements ProjectDao {
       @Override
       @NonNull
       public String createQuery() {
-        final String _query = "UPDATE project SET name = ?, boss = ?, work_type = ?, unit_price = ?, overtime_price = ?, note = ? WHERE id = ?";
+        final String _query = "UPDATE project SET name = ?, boss = ?, work_type = ?, unit_price = ?, overtime_price = ?, hour_per_work = ?, note = ? WHERE id = ?";
         return _query;
       }
     };
@@ -152,8 +158,8 @@ public final class ProjectDao_Impl implements ProjectDao {
 
   @Override
   public Object update(final long id, final String name, final String boss, final WorkType workType,
-      final BigDecimal unitPrice, final BigDecimal overtimePrice, final String note,
-      final Continuation<? super Unit> $completion) {
+      final BigDecimal unitPrice, final BigDecimal overtimePrice, final BigDecimal hourPerWork,
+      final String note, final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -193,12 +199,19 @@ public final class ProjectDao_Impl implements ProjectDao {
           _stmt.bindString(_argIndex, _tmp_2);
         }
         _argIndex = 6;
+        final String _tmp_3 = __converters.bigDecimalToString(hourPerWork);
+        if (_tmp_3 == null) {
+          _stmt.bindNull(_argIndex);
+        } else {
+          _stmt.bindString(_argIndex, _tmp_3);
+        }
+        _argIndex = 7;
         if (note == null) {
           _stmt.bindNull(_argIndex);
         } else {
           _stmt.bindString(_argIndex, note);
         }
-        _argIndex = 7;
+        _argIndex = 8;
         _stmt.bindLong(_argIndex, id);
         try {
           __db.beginTransaction();
@@ -233,6 +246,7 @@ public final class ProjectDao_Impl implements ProjectDao {
           final int _cursorIndexOfWorkType = CursorUtil.getColumnIndexOrThrow(_cursor, "work_type");
           final int _cursorIndexOfUnitPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "unit_price");
           final int _cursorIndexOfOvertimePrice = CursorUtil.getColumnIndexOrThrow(_cursor, "overtime_price");
+          final int _cursorIndexOfHourPerWork = CursorUtil.getColumnIndexOrThrow(_cursor, "hour_per_work");
           final int _cursorIndexOfNote = CursorUtil.getColumnIndexOrThrow(_cursor, "note");
           final List<Project> _result = new ArrayList<Project>(_cursor.getCount());
           while (_cursor.moveToNext()) {
@@ -275,13 +289,21 @@ public final class ProjectDao_Impl implements ProjectDao {
               _tmp_2 = _cursor.getString(_cursorIndexOfOvertimePrice);
             }
             _tmpOvertimePrice = __converters.stringToBigDecimal(_tmp_2);
+            final BigDecimal _tmpHourPerWork;
+            final String _tmp_3;
+            if (_cursor.isNull(_cursorIndexOfHourPerWork)) {
+              _tmp_3 = null;
+            } else {
+              _tmp_3 = _cursor.getString(_cursorIndexOfHourPerWork);
+            }
+            _tmpHourPerWork = __converters.stringToBigDecimal(_tmp_3);
             final String _tmpNote;
             if (_cursor.isNull(_cursorIndexOfNote)) {
               _tmpNote = null;
             } else {
               _tmpNote = _cursor.getString(_cursorIndexOfNote);
             }
-            _item = new Project(_tmpId,_tmpName,_tmpBoss,_tmpWorkType,_tmpUnitPrice,_tmpOvertimePrice,_tmpNote);
+            _item = new Project(_tmpId,_tmpName,_tmpBoss,_tmpWorkType,_tmpUnitPrice,_tmpOvertimePrice,_tmpHourPerWork,_tmpNote);
             _result.add(_item);
           }
           return _result;
@@ -312,6 +334,7 @@ public final class ProjectDao_Impl implements ProjectDao {
           final int _cursorIndexOfWorkType = CursorUtil.getColumnIndexOrThrow(_cursor, "work_type");
           final int _cursorIndexOfUnitPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "unit_price");
           final int _cursorIndexOfOvertimePrice = CursorUtil.getColumnIndexOrThrow(_cursor, "overtime_price");
+          final int _cursorIndexOfHourPerWork = CursorUtil.getColumnIndexOrThrow(_cursor, "hour_per_work");
           final int _cursorIndexOfNote = CursorUtil.getColumnIndexOrThrow(_cursor, "note");
           final Project _result;
           if (_cursor.moveToFirst()) {
@@ -353,13 +376,21 @@ public final class ProjectDao_Impl implements ProjectDao {
               _tmp_2 = _cursor.getString(_cursorIndexOfOvertimePrice);
             }
             _tmpOvertimePrice = __converters.stringToBigDecimal(_tmp_2);
+            final BigDecimal _tmpHourPerWork;
+            final String _tmp_3;
+            if (_cursor.isNull(_cursorIndexOfHourPerWork)) {
+              _tmp_3 = null;
+            } else {
+              _tmp_3 = _cursor.getString(_cursorIndexOfHourPerWork);
+            }
+            _tmpHourPerWork = __converters.stringToBigDecimal(_tmp_3);
             final String _tmpNote;
             if (_cursor.isNull(_cursorIndexOfNote)) {
               _tmpNote = null;
             } else {
               _tmpNote = _cursor.getString(_cursorIndexOfNote);
             }
-            _result = new Project(_tmpId,_tmpName,_tmpBoss,_tmpWorkType,_tmpUnitPrice,_tmpOvertimePrice,_tmpNote);
+            _result = new Project(_tmpId,_tmpName,_tmpBoss,_tmpWorkType,_tmpUnitPrice,_tmpOvertimePrice,_tmpHourPerWork,_tmpNote);
           } else {
             _result = null;
           }

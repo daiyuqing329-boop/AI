@@ -87,7 +87,7 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
   }
 
   @Override
-  public Object insert(final BorrowRecord record, final Continuation<? super Long> $completion) {
+  public Object insert(final BorrowRecord record, final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -101,11 +101,11 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object delete(final BorrowRecord record, final Continuation<? super Unit> $completion) {
+  public Object delete(final BorrowRecord record, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -119,12 +119,12 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object getAllByProject(final long projectId,
-      final Continuation<? super List<BorrowRecord>> $completion) {
+      final Continuation<? super List<BorrowRecord>> arg1) {
     final String _sql = "SELECT * FROM borrow_record WHERE project_id = ? ORDER BY date DESC, id DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -180,11 +180,11 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<BorrowRecord>> $completion) {
+  public Object getAll(final Continuation<? super List<BorrowRecord>> arg0) {
     final String _sql = "SELECT * FROM borrow_record ORDER BY date DESC, id DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -238,12 +238,11 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object sumBorrow(final long projectId,
-      final Continuation<? super BigDecimal> $completion) {
+  public Object sumBorrow(final long projectId, final Continuation<? super BigDecimal> arg1) {
     final String _sql = "SELECT COALESCE(SUM(amount), 0) FROM borrow_record WHERE project_id = ? AND kind = '借支'";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -273,12 +272,11 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object sumSettled(final long projectId,
-      final Continuation<? super BigDecimal> $completion) {
+  public Object sumSettled(final long projectId, final Continuation<? super BigDecimal> arg1) {
     final String _sql = "SELECT COALESCE(SUM(amount), 0) FROM borrow_record WHERE project_id = ? AND kind = '结算'";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -308,7 +306,7 @@ public final class BorrowRecordDao_Impl implements BorrowRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull

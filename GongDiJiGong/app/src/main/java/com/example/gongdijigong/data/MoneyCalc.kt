@@ -26,6 +26,17 @@ object MoneyCalc {
         overtimePrice: BigDecimal
     ): BigDecimal = add(mul(hours, unitPrice), mul(overtimeHours, overtimePrice))
 
+    /**
+     * 把“小时数”折算成“工数”：hours ÷ 每工小时数。
+     * 每工小时数 <= 0 时原样返回（视为非计时）。
+     */
+    fun toWorkCount(hours: BigDecimal, hourPerWork: BigDecimal): BigDecimal =
+        if (hourPerWork.signum() > 0) {
+            hours.divide(hourPerWork, 4, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP)
+        } else {
+            hours
+        }
+
     /** 去掉多余的尾零，以普通字符串展示 */
     fun fmt(bd: BigDecimal): String =
         bd.stripTrailingZeros().toPlainString()

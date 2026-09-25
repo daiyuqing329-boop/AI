@@ -21,7 +21,7 @@ interface ProjectDao {
     suspend fun delete(project: Project)
 
     /** 更新工地信息与记工模板参数 */
-    @Query("UPDATE project SET name = :name, boss = :boss, work_type = :workType, unit_price = :unitPrice, overtime_price = :overtimePrice, note = :note WHERE id = :id")
+    @Query("UPDATE project SET name = :name, boss = :boss, work_type = :workType, unit_price = :unitPrice, overtime_price = :overtimePrice, hour_per_work = :hourPerWork, note = :note WHERE id = :id")
     suspend fun update(
         id: Long,
         name: String,
@@ -29,6 +29,7 @@ interface ProjectDao {
         workType: WorkType,
         unitPrice: BigDecimal,
         overtimePrice: BigDecimal,
+        hourPerWork: BigDecimal,
         note: String
     )
 }

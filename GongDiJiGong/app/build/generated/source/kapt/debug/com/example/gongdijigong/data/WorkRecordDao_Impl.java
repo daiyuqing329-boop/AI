@@ -126,7 +126,7 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
   }
 
   @Override
-  public Object insert(final WorkRecord record, final Continuation<? super Long> $completion) {
+  public Object insert(final WorkRecord record, final Continuation<? super Long> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
       @NonNull
@@ -140,11 +140,11 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object delete(final WorkRecord record, final Continuation<? super Unit> $completion) {
+  public Object delete(final WorkRecord record, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -158,12 +158,12 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object setSettled(final long id, final boolean settled,
-      final Continuation<? super Unit> $completion) {
+      final Continuation<? super Unit> arg2) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -187,12 +187,12 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           __preparedStmtOfSetSettled.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg2);
   }
 
   @Override
   public Object getAllByProject(final long projectId,
-      final Continuation<? super List<WorkRecord>> $completion) {
+      final Continuation<? super List<WorkRecord>> arg1) {
     final String _sql = "SELECT * FROM work_record WHERE project_id = ? ORDER BY date DESC, id DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -291,11 +291,11 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object getAll(final Continuation<? super List<WorkRecord>> $completion) {
+  public Object getAll(final Continuation<? super List<WorkRecord>> arg0) {
     final String _sql = "SELECT * FROM work_record ORDER BY date DESC, id DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -392,12 +392,11 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object sumUnsettled(final long projectId,
-      final Continuation<? super BigDecimal> $completion) {
+  public Object sumUnsettled(final long projectId, final Continuation<? super BigDecimal> arg1) {
     final String _sql = "SELECT COALESCE(SUM(amount), 0) FROM work_record WHERE project_id = ? AND settled = 0";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -427,11 +426,11 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object sumAll(final long projectId, final Continuation<? super BigDecimal> $completion) {
+  public Object sumAll(final long projectId, final Continuation<? super BigDecimal> arg1) {
     final String _sql = "SELECT COALESCE(SUM(amount), 0) FROM work_record WHERE project_id = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -461,12 +460,12 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object getByRange(final long start, final long end,
-      final Continuation<? super List<WorkRecord>> $completion) {
+      final Continuation<? super List<WorkRecord>> arg2) {
     final String _sql = "SELECT * FROM work_record WHERE date BETWEEN ? AND ? ORDER BY date ASC, id ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
     int _argIndex = 1;
@@ -567,7 +566,7 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg2);
   }
 
   @NonNull

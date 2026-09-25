@@ -25,6 +25,7 @@ class AddRecordActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.get(this) }
     private val projects = mutableListOf<Project>()
     private var selectedProjectId = 0L
+    private var hourPerWork = BigDecimal("8")
     private var selectedDate: LocalDate = LocalDate.now()
     private var loadingProjects = false
 
@@ -82,15 +83,17 @@ class AddRecordActivity : AppCompatActivity() {
         binding.edUnitPrice.addTextChangedListener(watcher)
         binding.edOtHours.addTextChangedListener(watcher)
         binding.edOtPrice.addTextChangedListener(watcher)
+        binding.rgType.setOnCheckedChangeListener { _, _ -> updatePreview() }
 
         binding.btnSave.setOnClickListener { save() }
     }
 
     private fun prefs(): SharedPreferences = getSharedPreferences("hongzhizhao", MODE_PRIVATE)
 
-    /** 从工地模板自动带出：记工方式、工价、加班工价。 */
+    /** 从工地模板自动带出：记工方式、工价、加班工价、每工小时数。 */
     private fun applyTemplate(p: Project) {
         selectedProjectId = p.id
+        hourPerWork = p.hourPerWork
         when (p.workType) {
             WorkType.PACKAGE -> binding.typePackage.isChecked = true
             WorkType.TIME -> binding.typeTime.isChecked = true
@@ -101,13 +104,31 @@ class AddRecordActivity : AppCompatActivity() {
         updatePreview()
     }
 
+    private fun isTimeType(): Boolean = selectedType() == WorkType.TIME
+
+    /** 按记工方式计算金额：计时按“每工小时数”折算成工数后×工价。 */
+    private fun calcAmount(hours: BigDecimal, price: BigDecimal, otH: BigDecimal, otP: BigDecimal): BigDecimal =
+        if (isTimeType()) {
+            MoneyCalc.add(
+                MoneyCalc.mul(MoneyCalc.toWorkCount(hours, hourPerWork), price),
+                MoneyCalc.mul(MoneyCalc.toWorkCount(otH, hourPerWork), otP)
+            )
+        } else {
+            MoneyCalc.recordAmount(hours, price, otH, otP)
+        }
+
     private fun updatePreview() {
         val hours = MoneyCalc.parse(binding.edHours.text.toString())
         val price = MoneyCalc.parse(binding.edUnitPrice.text.toString())
         val otH = MoneyCalc.parse(binding.edOtHours.text.toString())
         val otP = MoneyCalc.parse(binding.edOtPrice.text.toString())
-        val amount = MoneyCalc.recordAmount(hours, price, otH, otP)
-        binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元"
+        val amount = calcAmount(hours, price, otH, otP)
+        if (isTimeType()) {
+            val work = MoneyCalc.fmt(MoneyCalc.toWorkCount(hours, hourPerWork))
+            binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元（$work 工）"
+        } else {
+            binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元"
+        }
     }
 
     private fun selectedType(): WorkType =
@@ -131,7 +152,7 @@ class AddRecordActivity : AppCompatActivity() {
         }
         val otH = MoneyCalc.parse(binding.edOtHours.text.toString())
         val otP = MoneyCalc.parse(binding.edOtPrice.text.toString())
-        val amount = MoneyCalc.recordAmount(hours, price, otH, otP)
+        val amount = calcAmount(hours, price, otH, otP)
 
         val record = WorkRecord(
             projectId = selectedProjectId,

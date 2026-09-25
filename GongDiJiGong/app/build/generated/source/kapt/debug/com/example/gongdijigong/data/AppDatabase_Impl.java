@@ -35,14 +35,14 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS `project` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `boss` TEXT NOT NULL, `work_type` INTEGER NOT NULL, `unit_price` TEXT NOT NULL, `overtime_price` TEXT NOT NULL, `note` TEXT NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `project` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `boss` TEXT NOT NULL, `work_type` INTEGER NOT NULL, `unit_price` TEXT NOT NULL, `overtime_price` TEXT NOT NULL, `hour_per_work` TEXT NOT NULL, `note` TEXT NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `work_record` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` INTEGER NOT NULL, `date` INTEGER NOT NULL, `work_type` INTEGER NOT NULL, `hours` TEXT NOT NULL, `unit_price` TEXT NOT NULL, `amount` TEXT NOT NULL, `overtime_hours` TEXT NOT NULL, `overtime_price` TEXT NOT NULL, `settled` INTEGER NOT NULL, `note` TEXT NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `borrow_record` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` INTEGER NOT NULL, `date` INTEGER NOT NULL, `amount` TEXT NOT NULL, `kind` TEXT NOT NULL, `note` TEXT NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3cfee2c66da3caea91c5b42e9ea1a563')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e5931656e139ab195d38fb248d5799fd')");
       }
 
       @Override
@@ -93,13 +93,14 @@ public final class AppDatabase_Impl extends AppDatabase {
       @NonNull
       public RoomOpenHelper.ValidationResult onValidateSchema(
           @NonNull final SupportSQLiteDatabase db) {
-        final HashMap<String, TableInfo.Column> _columnsProject = new HashMap<String, TableInfo.Column>(7);
+        final HashMap<String, TableInfo.Column> _columnsProject = new HashMap<String, TableInfo.Column>(8);
         _columnsProject.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProject.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProject.put("boss", new TableInfo.Column("boss", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProject.put("work_type", new TableInfo.Column("work_type", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProject.put("unit_price", new TableInfo.Column("unit_price", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProject.put("overtime_price", new TableInfo.Column("overtime_price", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsProject.put("hour_per_work", new TableInfo.Column("hour_per_work", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProject.put("note", new TableInfo.Column("note", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysProject = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesProject = new HashSet<TableInfo.Index>(0);
@@ -149,7 +150,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "3cfee2c66da3caea91c5b42e9ea1a563", "a7959b893b86a0a35bc11609f0caa601");
+    }, "e5931656e139ab195d38fb248d5799fd", "48fc8af679abed1ddfb12f166f82d819");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
