@@ -25,6 +25,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final MaterialButton btnBorrow;
 
   @NonNull
+  public final MaterialButton btnCalendar;
+
+  @NonNull
   public final MaterialButton btnExport;
 
   @NonNull
@@ -52,13 +55,14 @@ public final class ActivityMainBinding implements ViewBinding {
   public final MaterialToolbar toolbar;
 
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull MaterialButton btnBorrow,
-      @NonNull MaterialButton btnExport, @NonNull MaterialButton btnProjects,
-      @NonNull MaterialButton btnRecord, @NonNull MaterialButton btnStats,
-      @NonNull TextView cardHoursValue, @NonNull TextView cardTodayTitle,
-      @NonNull TextView cardTodayValue, @NonNull TextView cardUnsettledValue,
-      @NonNull MaterialToolbar toolbar) {
+      @NonNull MaterialButton btnCalendar, @NonNull MaterialButton btnExport,
+      @NonNull MaterialButton btnProjects, @NonNull MaterialButton btnRecord,
+      @NonNull MaterialButton btnStats, @NonNull TextView cardHoursValue,
+      @NonNull TextView cardTodayTitle, @NonNull TextView cardTodayValue,
+      @NonNull TextView cardUnsettledValue, @NonNull MaterialToolbar toolbar) {
     this.rootView = rootView;
     this.btnBorrow = btnBorrow;
+    this.btnCalendar = btnCalendar;
     this.btnExport = btnExport;
     this.btnProjects = btnProjects;
     this.btnRecord = btnRecord;
@@ -100,6 +104,12 @@ public final class ActivityMainBinding implements ViewBinding {
       id = R.id.btn_borrow;
       MaterialButton btnBorrow = ViewBindings.findChildViewById(rootView, id);
       if (btnBorrow == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_calendar;
+      MaterialButton btnCalendar = ViewBindings.findChildViewById(rootView, id);
+      if (btnCalendar == null) {
         break missingId;
       }
 
@@ -157,9 +167,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, btnBorrow, btnExport, btnProjects,
-          btnRecord, btnStats, cardHoursValue, cardTodayTitle, cardTodayValue, cardUnsettledValue,
-          toolbar);
+      return new ActivityMainBinding((LinearLayout) rootView, btnBorrow, btnCalendar, btnExport,
+          btnProjects, btnRecord, btnStats, cardHoursValue, cardTodayTitle, cardTodayValue,
+          cardUnsettledValue, toolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

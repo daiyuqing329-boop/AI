@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.gongdijigong.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.google.android.material.appbar.MaterialToolbar;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -21,14 +23,22 @@ public final class ActivityStatsBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final BarChart bar;
+
+  @NonNull
+  public final PieChart pie;
+
+  @NonNull
   public final RecyclerView rv;
 
   @NonNull
   public final MaterialToolbar toolbar;
 
-  private ActivityStatsBinding(@NonNull LinearLayout rootView, @NonNull RecyclerView rv,
-      @NonNull MaterialToolbar toolbar) {
+  private ActivityStatsBinding(@NonNull LinearLayout rootView, @NonNull BarChart bar,
+      @NonNull PieChart pie, @NonNull RecyclerView rv, @NonNull MaterialToolbar toolbar) {
     this.rootView = rootView;
+    this.bar = bar;
+    this.pie = pie;
     this.rv = rv;
     this.toolbar = toolbar;
   }
@@ -60,6 +70,18 @@ public final class ActivityStatsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.bar;
+      BarChart bar = ViewBindings.findChildViewById(rootView, id);
+      if (bar == null) {
+        break missingId;
+      }
+
+      id = R.id.pie;
+      PieChart pie = ViewBindings.findChildViewById(rootView, id);
+      if (pie == null) {
+        break missingId;
+      }
+
       id = R.id.rv;
       RecyclerView rv = ViewBindings.findChildViewById(rootView, id);
       if (rv == null) {
@@ -72,7 +94,7 @@ public final class ActivityStatsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityStatsBinding((LinearLayout) rootView, rv, toolbar);
+      return new ActivityStatsBinding((LinearLayout) rootView, bar, pie, rv, toolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

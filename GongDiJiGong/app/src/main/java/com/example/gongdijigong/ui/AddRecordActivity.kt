@@ -1,10 +1,11 @@
 package com.example.gongdijigong.ui
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ class AddRecordActivity : AppCompatActivity() {
     private val projects = mutableListOf<Project>()
     private var selectedProjectId = 0L
     private var selectedDate: LocalDate = LocalDate.now()
+    private var loadingProjects = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,17 @@ class AddRecordActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
 
         val presetId = intent.getLongExtra("projectId", 0L)
+        val lastProjectId = prefs().getLong("last_project_id", 0L)
+
+        binding.spProject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, pos: Int, id: Long) {
+                if (pos in projects.indices) {
+                    applyTemplate(projects[pos])
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
         lifecycleScope.launch {
             projects.addAll(db.projectDao().getAll())
             binding.spProject.adapter = ArrayAdapter(
@@ -41,8 +54,11 @@ class AddRecordActivity : AppCompatActivity() {
                 android.R.layout.simple_spinner_item,
                 projects.map { it.name }
             )
-            val idx = projects.indexOfFirst { it.id == presetId }
-            if (idx >= 0) binding.spProject.setSelection(idx)
+            // 优先用传入的工地；否则默认选上次使用的工地
+            var sel = projects.indexOfFirst { it.id == presetId }
+            if (sel < 0) sel = projects.indexOfFirst { it.id == lastProjectId }
+            if (sel < 0 && projects.isNotEmpty()) sel = 0
+            if (sel >= 0) binding.spProject.setSelection(sel)
         }
 
         binding.typePoint.isChecked = true
@@ -70,6 +86,21 @@ class AddRecordActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener { save() }
     }
 
+    private fun prefs(): SharedPreferences = getSharedPreferences("hongzhizhao", MODE_PRIVATE)
+
+    /** 从工地模板自动带出：记工方式、工价、加班工价。 */
+    private fun applyTemplate(p: Project) {
+        selectedProjectId = p.id
+        when (p.workType) {
+            WorkType.PACKAGE -> binding.typePackage.isChecked = true
+            WorkType.TIME -> binding.typeTime.isChecked = true
+            else -> binding.typePoint.isChecked = true
+        }
+        if (p.unitPrice.signum() > 0) binding.edUnitPrice.setText(MoneyCalc.fmt(p.unitPrice))
+        if (p.overtimePrice.signum() > 0) binding.edOtPrice.setText(MoneyCalc.fmt(p.overtimePrice))
+        updatePreview()
+    }
+
     private fun updatePreview() {
         val hours = MoneyCalc.parse(binding.edHours.text.toString())
         val price = MoneyCalc.parse(binding.edUnitPrice.text.toString())
@@ -88,7 +119,7 @@ class AddRecordActivity : AppCompatActivity() {
 
     private fun save() {
         if (projects.isEmpty()) {
-            Toast.makeText(this, "请先添加工地", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "请先添加工地并设置记工模板", Toast.LENGTH_SHORT).show()
             return
         }
         selectedProjectId = projects[binding.spProject.selectedItemPosition].id
@@ -115,6 +146,7 @@ class AddRecordActivity : AppCompatActivity() {
         )
         lifecycleScope.launch {
             db.workRecordDao().insert(record)
+            prefs().edit().putLong("last_project_id", selectedProjectId).apply()
             Toast.makeText(this@AddRecordActivity, "已保存，金额 ${MoneyCalc.fmt(amount)} 元", Toast.LENGTH_SHORT).show()
             finish()
         }

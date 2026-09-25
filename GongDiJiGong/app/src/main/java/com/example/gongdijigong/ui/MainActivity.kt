@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.btnStats.setOnClickListener { startActivity(Intent(this, StatsActivity::class.java)) }
+        binding.btnCalendar.setOnClickListener { startActivity(Intent(this, CalendarActivity::class.java)) }
         binding.btnExport.setOnClickListener { startActivity(Intent(this, ExportActivity::class.java)) }
     }
 

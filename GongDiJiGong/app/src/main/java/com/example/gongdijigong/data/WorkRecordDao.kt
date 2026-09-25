@@ -30,4 +30,8 @@ interface WorkRecordDao {
     /** 某项目记工总额 */
     @Query("SELECT COALESCE(SUM(amount), 0) FROM work_record WHERE project_id = :projectId")
     suspend fun sumAll(projectId: Long): BigDecimal
+
+    /** 某时间范围内的记工记录（日期存 epochDay） */
+    @Query("SELECT * FROM work_record WHERE date BETWEEN :start AND :end ORDER BY date ASC, id ASC")
+    suspend fun getByRange(start: Long, end: Long): List<WorkRecord>
 }

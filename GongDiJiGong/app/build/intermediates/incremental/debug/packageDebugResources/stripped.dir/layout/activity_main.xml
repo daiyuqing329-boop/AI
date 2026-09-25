@@ -139,6 +139,14 @@
                 android:text="@string/borrow" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_calendar"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/calendar" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_stats"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"

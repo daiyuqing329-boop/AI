@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import java.math.BigDecimal
 
 @Dao
 interface ProjectDao {
@@ -18,4 +19,16 @@ interface ProjectDao {
 
     @Delete
     suspend fun delete(project: Project)
+
+    /** 更新工地信息与记工模板参数 */
+    @Query("UPDATE project SET name = :name, boss = :boss, work_type = :workType, unit_price = :unitPrice, overtime_price = :overtimePrice, note = :note WHERE id = :id")
+    suspend fun update(
+        id: Long,
+        name: String,
+        boss: String,
+        workType: WorkType,
+        unitPrice: BigDecimal,
+        overtimePrice: BigDecimal,
+        note: String
+    )
 }

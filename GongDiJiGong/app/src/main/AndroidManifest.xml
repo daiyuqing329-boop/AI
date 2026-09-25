@@ -27,6 +27,7 @@
         <activity android:name=".ui.RecordsActivity" android:exported="false" />
         <activity android:name=".ui.AddRecordActivity" android:exported="false" />
         <activity android:name=".ui.BorrowActivity" android:exported="false" />
+        <activity android:name=".ui.CalendarActivity" android:exported="false" />
         <activity android:name=".ui.StatsActivity" android:exported="false" />
         <activity android:name=".ui.ExportActivity" android:exported="false" />
     </application>

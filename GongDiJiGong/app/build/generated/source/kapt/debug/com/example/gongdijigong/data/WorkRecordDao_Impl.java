@@ -464,6 +464,112 @@ public final class WorkRecordDao_Impl implements WorkRecordDao {
     }, $completion);
   }
 
+  @Override
+  public Object getByRange(final long start, final long end,
+      final Continuation<? super List<WorkRecord>> $completion) {
+    final String _sql = "SELECT * FROM work_record WHERE date BETWEEN ? AND ? ORDER BY date ASC, id ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, start);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, end);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<WorkRecord>>() {
+      @Override
+      @NonNull
+      public List<WorkRecord> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfProjectId = CursorUtil.getColumnIndexOrThrow(_cursor, "project_id");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "date");
+          final int _cursorIndexOfWorkType = CursorUtil.getColumnIndexOrThrow(_cursor, "work_type");
+          final int _cursorIndexOfHours = CursorUtil.getColumnIndexOrThrow(_cursor, "hours");
+          final int _cursorIndexOfUnitPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "unit_price");
+          final int _cursorIndexOfAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "amount");
+          final int _cursorIndexOfOvertimeHours = CursorUtil.getColumnIndexOrThrow(_cursor, "overtime_hours");
+          final int _cursorIndexOfOvertimePrice = CursorUtil.getColumnIndexOrThrow(_cursor, "overtime_price");
+          final int _cursorIndexOfSettled = CursorUtil.getColumnIndexOrThrow(_cursor, "settled");
+          final int _cursorIndexOfNote = CursorUtil.getColumnIndexOrThrow(_cursor, "note");
+          final List<WorkRecord> _result = new ArrayList<WorkRecord>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final WorkRecord _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpProjectId;
+            _tmpProjectId = _cursor.getLong(_cursorIndexOfProjectId);
+            final long _tmpDate;
+            _tmpDate = _cursor.getLong(_cursorIndexOfDate);
+            final WorkType _tmpWorkType;
+            final Integer _tmp;
+            if (_cursor.isNull(_cursorIndexOfWorkType)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getInt(_cursorIndexOfWorkType);
+            }
+            _tmpWorkType = __converters.intToWorkType(_tmp);
+            final BigDecimal _tmpHours;
+            final String _tmp_1;
+            if (_cursor.isNull(_cursorIndexOfHours)) {
+              _tmp_1 = null;
+            } else {
+              _tmp_1 = _cursor.getString(_cursorIndexOfHours);
+            }
+            _tmpHours = __converters.stringToBigDecimal(_tmp_1);
+            final BigDecimal _tmpUnitPrice;
+            final String _tmp_2;
+            if (_cursor.isNull(_cursorIndexOfUnitPrice)) {
+              _tmp_2 = null;
+            } else {
+              _tmp_2 = _cursor.getString(_cursorIndexOfUnitPrice);
+            }
+            _tmpUnitPrice = __converters.stringToBigDecimal(_tmp_2);
+            final BigDecimal _tmpAmount;
+            final String _tmp_3;
+            if (_cursor.isNull(_cursorIndexOfAmount)) {
+              _tmp_3 = null;
+            } else {
+              _tmp_3 = _cursor.getString(_cursorIndexOfAmount);
+            }
+            _tmpAmount = __converters.stringToBigDecimal(_tmp_3);
+            final BigDecimal _tmpOvertimeHours;
+            final String _tmp_4;
+            if (_cursor.isNull(_cursorIndexOfOvertimeHours)) {
+              _tmp_4 = null;
+            } else {
+              _tmp_4 = _cursor.getString(_cursorIndexOfOvertimeHours);
+            }
+            _tmpOvertimeHours = __converters.stringToBigDecimal(_tmp_4);
+            final BigDecimal _tmpOvertimePrice;
+            final String _tmp_5;
+            if (_cursor.isNull(_cursorIndexOfOvertimePrice)) {
+              _tmp_5 = null;
+            } else {
+              _tmp_5 = _cursor.getString(_cursorIndexOfOvertimePrice);
+            }
+            _tmpOvertimePrice = __converters.stringToBigDecimal(_tmp_5);
+            final boolean _tmpSettled;
+            final int _tmp_6;
+            _tmp_6 = _cursor.getInt(_cursorIndexOfSettled);
+            _tmpSettled = _tmp_6 != 0;
+            final String _tmpNote;
+            if (_cursor.isNull(_cursorIndexOfNote)) {
+              _tmpNote = null;
+            } else {
+              _tmpNote = _cursor.getString(_cursorIndexOfNote);
+            }
+            _item = new WorkRecord(_tmpId,_tmpProjectId,_tmpDate,_tmpWorkType,_tmpHours,_tmpUnitPrice,_tmpAmount,_tmpOvertimeHours,_tmpOvertimePrice,_tmpSettled,_tmpNote);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

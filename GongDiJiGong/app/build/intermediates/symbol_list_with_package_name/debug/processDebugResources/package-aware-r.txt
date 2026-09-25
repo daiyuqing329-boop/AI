@@ -3170,6 +3170,7 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id bar
 id barrier
 id baseline
 id beginOnFirstDraw
@@ -3182,8 +3183,11 @@ id bounceBoth
 id bounceEnd
 id bounceStart
 id btnExport
+id btnNext
+id btnPrev
 id btnSave
 id btn_borrow
+id btn_calendar
 id btn_export
 id btn_projects
 id btn_record
@@ -3232,6 +3236,7 @@ id custom
 id customPanel
 id cut
 id date_picker_actions
+id dayDetail
 id decelerate
 id decelerateAndComplete
 id decor_content_parent
@@ -3305,6 +3310,7 @@ id ghost_view_holder
 id gone
 id graph
 id graph_wrap
+id grid
 id group_divider
 id grouping
 id groups
@@ -3451,6 +3457,7 @@ id path
 id pathRelative
 id peekHeight
 id percent
+id pie
 id pin
 id pooling_container_listener_holder_tag
 id position
@@ -3580,7 +3587,12 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvAmount
 id tvAmountPreview
+id tvDay
+id tvMonth
+id tvMonthHours
+id tvMonthTotal
 id tvPreview
 id tv_amount
 id tv_borrow
@@ -3738,6 +3750,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_add_record
 layout activity_borrow
+layout activity_calendar
 layout activity_export
 layout activity_main
 layout activity_projects
@@ -3762,6 +3775,7 @@ layout design_text_input_start_icon
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
 layout item_borrow
+layout item_calendar_day
 layout item_project
 layout item_record
 layout item_stat
@@ -3864,6 +3878,7 @@ string bottomsheet_action_expand
 string bottomsheet_action_expand_halfway
 string bottomsheet_drag_handle_clicked
 string bottomsheet_drag_handle_content_description
+string calendar
 string call_notification_answer_action
 string call_notification_answer_video_action
 string call_notification_decline_action
