@@ -3273,7 +3273,6 @@ id edDate
 id edHours
 id edNote
 id edOtHours
-id edOtPrice
 id edUnitPrice
 id edge
 id edit_query

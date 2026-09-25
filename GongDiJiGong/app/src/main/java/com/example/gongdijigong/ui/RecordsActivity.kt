@@ -74,10 +74,9 @@ class RecordsActivity : AppCompatActivity() {
             h.b.tvType.text = r.workType.label
             h.b.tvSettled.text = if (r.settled) "已结" else "未结"
             h.b.tvSettled.setBackgroundColor(getColor(if (r.settled) R.color.primary else R.color.accent))
-            h.b.tvAmount.text = "${MoneyCalc.fmt(r.hours)} × ${MoneyCalc.fmt(r.unitPrice)} 元 = ${MoneyCalc.fmt(r.amount)} 元"
-            h.b.tvOvertime.text = if (r.overtimeHours.signum() > 0) {
-                "加班 ${MoneyCalc.fmt(r.overtimeHours)} 小时 × ${MoneyCalc.fmt(r.overtimePrice)} 元/时"
-            } else ""
+            val ot = if (r.overtimeHours.signum() > 0) "，加班${MoneyCalc.fmt(r.overtimeHours)}小时" else ""
+            h.b.tvAmount.text = "干${MoneyCalc.fmt(r.hours)}小时$ot = ${MoneyCalc.fmt(r.amount)} 元"
+            h.b.tvOvertime.text = ""
             h.b.tvNote.text = r.note
             h.b.root.setOnClickListener {
                 lifecycleScope.launch {

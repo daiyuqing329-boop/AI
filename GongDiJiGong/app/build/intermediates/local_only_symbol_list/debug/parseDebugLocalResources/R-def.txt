@@ -29,7 +29,6 @@ id edDate
 id edHours
 id edNote
 id edOtHours
-id edOtPrice
 id edUnitPrice
 id fab
 id grid

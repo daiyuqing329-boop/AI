@@ -13,7 +13,6 @@ import com.example.gongdijigong.data.AppDatabase
 import com.example.gongdijigong.data.MoneyCalc
 import com.example.gongdijigong.data.Project
 import com.example.gongdijigong.data.WorkRecord
-import com.example.gongdijigong.data.WorkType
 import com.example.gongdijigong.databinding.ActivityAddRecordBinding
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -25,7 +24,7 @@ class AddRecordActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.get(this) }
     private val projects = mutableListOf<Project>()
     private var selectedProjectId = 0L
-    private var currentType = WorkType.POINT
+    private var hourPerWork = BigDecimal("8")
     private var selectedDate: LocalDate = LocalDate.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,44 +76,38 @@ class AddRecordActivity : AppCompatActivity() {
         binding.edHours.addTextChangedListener(watcher)
         binding.edUnitPrice.addTextChangedListener(watcher)
         binding.edOtHours.addTextChangedListener(watcher)
-        binding.edOtPrice.addTextChangedListener(watcher)
 
         binding.btnSave.setOnClickListener { save() }
     }
 
     private fun prefs(): SharedPreferences = getSharedPreferences("hongzhizhao", MODE_PRIVATE)
 
-    /** 使用工地模板固定的记工方式；工数/工价/加班工价自动带出。 */
+    /** 使用工地模板：每工小时数 + 一个工的价，自动带出。 */
     private fun applyTemplate(p: Project) {
         selectedProjectId = p.id
-        currentType = p.workType
-        val unitText = when (currentType) {
-            WorkType.PACKAGE -> "工程量"
-            WorkType.TIME -> "工（个）"
-            else -> "工（个）"
-        }
-        binding.tvWorkType.text = "本工地记工方式：${currentType.label}（录$unitText）"
-        binding.edHours.hint = when (currentType) {
-            WorkType.PACKAGE -> "如 100（平方/件）"
-            WorkType.TIME -> "如 1 或 1.5（个工）"
-            else -> "如 1 或 1.5（个工）"
-        }
+        hourPerWork = p.hourPerWork
+        binding.tvWorkType.text = "本工地：1 工 = ${MoneyCalc.fmt(p.hourPerWork)} 小时 · ${MoneyCalc.fmt(p.unitPrice)} 元/工"
         if (p.unitPrice.signum() > 0) binding.edUnitPrice.setText(MoneyCalc.fmt(p.unitPrice))
-        if (p.overtimePrice.signum() > 0) binding.edOtPrice.setText(MoneyCalc.fmt(p.overtimePrice))
         updatePreview()
     }
 
+    /** 小时工价 = 一个工的价 ÷ 每工小时数。 */
+    private fun hourlyRate(price: BigDecimal): BigDecimal =
+        if (hourPerWork.signum() > 0) price.divide(hourPerWork, 4, java.math.RoundingMode.HALF_UP) else price
+
     /**
-     * 金额 = 工数(或工程量)×工价 + 加班几小时×加班工价。
-     * 加班按小时计（加班工价 = 元/小时）。
+     * 金额 = (正常小时 + 加班小时) × 小时工价。
+     * 小时工价 = 工价 ÷ 每工小时数，没有倍率。
      */
     private fun updatePreview() {
         val hours = MoneyCalc.parse(binding.edHours.text.toString())
         val price = MoneyCalc.parse(binding.edUnitPrice.text.toString())
         val otH = MoneyCalc.parse(binding.edOtHours.text.toString())
-        val otP = MoneyCalc.parse(binding.edOtPrice.text.toString())
-        val amount = MoneyCalc.recordAmount(hours, price, otH, otP)
-        binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元"
+        val totalH = hours.add(otH)
+        val rate = hourlyRate(price)
+        val amount = MoneyCalc.mul(totalH, rate)
+        val work = MoneyCalc.fmt(MoneyCalc.toWorkCount(totalH, hourPerWork))
+        binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元（${MoneyCalc.fmt(totalH)}小时 = $work 工 · ${MoneyCalc.fmt(rate)}元/小时）"
     }
 
     private fun save() {
@@ -125,23 +118,24 @@ class AddRecordActivity : AppCompatActivity() {
         selectedProjectId = projects[binding.spProject.selectedItemPosition].id
         val hours = MoneyCalc.parse(binding.edHours.text.toString())
         val price = MoneyCalc.parse(binding.edUnitPrice.text.toString())
-        if (hours.signum() <= 0 || price.signum() <= 0) {
-            Toast.makeText(this, "请填写记工数量和工价", Toast.LENGTH_SHORT).show()
+        if (hours.signum() < 0 || price.signum() <= 0) {
+            Toast.makeText(this, "请填写小时数和工价", Toast.LENGTH_SHORT).show()
             return
         }
         val otH = MoneyCalc.parse(binding.edOtHours.text.toString())
-        val otP = MoneyCalc.parse(binding.edOtPrice.text.toString())
-        val amount = MoneyCalc.recordAmount(hours, price, otH, otP)
+        val totalH = hours.add(otH)
+        val rate = hourlyRate(price)
+        val amount = MoneyCalc.mul(totalH, rate)
 
         val record = WorkRecord(
             projectId = selectedProjectId,
             date = selectedDate.toEpochDay(),
-            workType = currentType,
+            workType = com.example.gongdijigong.data.WorkType.POINT,
             hours = hours,
             unitPrice = price,
             amount = amount,
             overtimeHours = otH,
-            overtimePrice = otP,
+            overtimePrice = BigDecimal.ZERO,
             note = binding.edNote.text.toString().trim()
         )
         lifecycleScope.launch {

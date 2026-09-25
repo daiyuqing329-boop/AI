@@ -39,9 +39,6 @@ public final class ActivityAddRecordBinding implements ViewBinding {
   public final EditText edOtHours;
 
   @NonNull
-  public final EditText edOtPrice;
-
-  @NonNull
   public final EditText edUnitPrice;
 
   @NonNull
@@ -58,16 +55,15 @@ public final class ActivityAddRecordBinding implements ViewBinding {
 
   private ActivityAddRecordBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnSave,
       @NonNull EditText edDate, @NonNull EditText edHours, @NonNull EditText edNote,
-      @NonNull EditText edOtHours, @NonNull EditText edOtPrice, @NonNull EditText edUnitPrice,
-      @NonNull Spinner spProject, @NonNull MaterialToolbar toolbar,
-      @NonNull TextView tvAmountPreview, @NonNull TextView tvWorkType) {
+      @NonNull EditText edOtHours, @NonNull EditText edUnitPrice, @NonNull Spinner spProject,
+      @NonNull MaterialToolbar toolbar, @NonNull TextView tvAmountPreview,
+      @NonNull TextView tvWorkType) {
     this.rootView = rootView;
     this.btnSave = btnSave;
     this.edDate = edDate;
     this.edHours = edHours;
     this.edNote = edNote;
     this.edOtHours = edOtHours;
-    this.edOtPrice = edOtPrice;
     this.edUnitPrice = edUnitPrice;
     this.spProject = spProject;
     this.toolbar = toolbar;
@@ -132,12 +128,6 @@ public final class ActivityAddRecordBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.edOtPrice;
-      EditText edOtPrice = ViewBindings.findChildViewById(rootView, id);
-      if (edOtPrice == null) {
-        break missingId;
-      }
-
       id = R.id.edUnitPrice;
       EditText edUnitPrice = ViewBindings.findChildViewById(rootView, id);
       if (edUnitPrice == null) {
@@ -169,7 +159,7 @@ public final class ActivityAddRecordBinding implements ViewBinding {
       }
 
       return new ActivityAddRecordBinding((ScrollView) rootView, btnSave, edDate, edHours, edNote,
-          edOtHours, edOtPrice, edUnitPrice, spProject, toolbar, tvAmountPreview, tvWorkType);
+          edOtHours, edUnitPrice, spProject, toolbar, tvAmountPreview, tvWorkType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -48,11 +48,7 @@ class ProjectsActivity : AppCompatActivity() {
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
             if (existing != null && existing.unitPrice.signum() > 0) setText(MoneyCalc.fmt(existing.unitPrice))
         }
-        val otPrice = android.widget.EditText(this).apply {
-            hint = "加班工价（元，可选）"
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
-            if (existing != null && existing.overtimePrice.signum() > 0) setText(MoneyCalc.fmt(existing.overtimePrice))
-        }
+        val otPrice = BigDecimal.ZERO
         val hpw = android.widget.EditText(this).apply {
             hint = "每工小时数（如 8，即几小时算一个工）"
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
@@ -82,7 +78,6 @@ class ProjectsActivity : AppCompatActivity() {
             addView(boss)
             addView(typeGroup)
             addView(price)
-            addView(otPrice)
             addView(hpw)
         }
         AlertDialog.Builder(this)
@@ -97,15 +92,14 @@ class ProjectsActivity : AppCompatActivity() {
                     else -> WorkType.POINT
                 }
                 val up = MoneyCalc.parse(price.text.toString())
-                val otp = MoneyCalc.parse(otPrice.text.toString())
                 val h = MoneyCalc.parse(hpw.text.toString()).let { if (it.signum() <= 0) BigDecimal("8") else it }
                 lifecycleScope.launch {
                     if (existing == null) {
                         db.projectDao().insert(
-                            Project(name = nm, boss = boss.text.toString().trim(), workType = wt, unitPrice = up, overtimePrice = otp, hourPerWork = h)
+                            Project(name = nm, boss = boss.text.toString().trim(), workType = wt, unitPrice = up, overtimePrice = otPrice, hourPerWork = h)
                         )
                     } else {
-                        db.projectDao().update(existing.id, nm, boss.text.toString().trim(), wt, up, otp, h, existing.note)
+                        db.projectDao().update(existing.id, nm, boss.text.toString().trim(), wt, up, otPrice, h, existing.note)
                     }
                     load()
                 }
@@ -134,10 +128,8 @@ class ProjectsActivity : AppCompatActivity() {
             val p = items[position]
             h.b.tvName.text = p.name
             h.b.tvBoss.text = p.boss.ifEmpty { "（无老板）" }
-            val wt = p.workType.label
-            val up = if (p.unitPrice.signum() > 0) "${MoneyCalc.fmt(p.unitPrice)}元" else "未设工价"
-            val ot = if (p.overtimePrice.signum() > 0) " · 加班${MoneyCalc.fmt(p.overtimePrice)}元" else ""
-            h.b.tvSummary.text = "$wt · $up$ot · 点击记工 · 长按管理"
+            val up = if (p.unitPrice.signum() > 0) "${MoneyCalc.fmt(p.unitPrice)}元/工" else "未设工价"
+            h.b.tvSummary.text = "每工 ${MoneyCalc.fmt(p.hourPerWork)} 小时 · $up · 点击记工"
             h.b.root.setOnClickListener {
                 startActivity(
                     Intent(this@ProjectsActivity, RecordsActivity::class.java)
