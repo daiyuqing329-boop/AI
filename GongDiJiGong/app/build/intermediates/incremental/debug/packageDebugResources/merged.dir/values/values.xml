@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#FF9800</color>
+    <color name="background">#F5F5F5</color>
+    <color name="black">#000000</color>
+    <color name="primary">#2E7D32</color>
+    <color name="primary_dark">#1B5E20</color>
+    <color name="purple_500">#6750A4</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">工地记工</string>
+    <string name="borrow">借支</string>
+    <string name="export">导出</string>
+    <string name="home_title">工地记工</string>
+    <string name="projects">工地</string>
+    <string name="record">记工</string>
+    <string name="stats">统计</string>
+    <style name="Theme.GongDiJiGong" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+</resources>

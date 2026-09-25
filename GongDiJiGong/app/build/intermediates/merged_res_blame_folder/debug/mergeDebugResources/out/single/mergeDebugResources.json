@@ -1,0 +1,54 @@
+[
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_borrow.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_borrow.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_add_record.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_add_record.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/drawable_ic_launcher.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/drawable/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_item_borrow.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_borrow.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_main.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_item_record.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_record.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_item_project.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_project.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_stats.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_stats.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_projects.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_projects.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/drawable_bg_card.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/drawable/bg_card.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_item_stat.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_stat.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_records.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_records.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_export.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_export.xml"
+    }
+]

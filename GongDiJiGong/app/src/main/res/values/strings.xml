@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">工地记工</string>
+    <string name="home_title">工地记工</string>
+    <string name="record">记工</string>
+    <string name="borrow">借支</string>
+    <string name="stats">统计</string>
+    <string name="projects">工地</string>
+    <string name="export">导出</string>
+</resources>

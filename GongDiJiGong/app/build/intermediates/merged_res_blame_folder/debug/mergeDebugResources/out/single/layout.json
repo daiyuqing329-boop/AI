@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_borrow.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_borrow.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_projects.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_projects.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/item_record.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_record.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/item_project.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_project.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_records.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_records.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/item_stat.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_stat.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/item_borrow.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/item_borrow.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_add_record.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_add_record.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_stats.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_stats.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_export.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_export.xml"
+    },
+    {
+        "merged": "com.example.gongdijigong.app-mergeDebugResources-38:/layout/activity_main.xml",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_main.xml"
+    }
+]
