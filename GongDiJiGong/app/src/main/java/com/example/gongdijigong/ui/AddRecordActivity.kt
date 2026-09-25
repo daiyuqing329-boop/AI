@@ -14,6 +14,7 @@ import com.example.gongdijigong.data.MoneyCalc
 import com.example.gongdijigong.data.Project
 import com.example.gongdijigong.data.WorkRecord
 import com.example.gongdijigong.databinding.ActivityAddRecordBinding
+import com.example.gongdijigong.util.TimeSync
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -58,6 +59,14 @@ class AddRecordActivity : AppCompatActivity() {
         }
 
         binding.edDate.setText(selectedDate.toString())
+        // 联网校准“今天”（服务器最新日期），刷新默认日期
+        lifecycleScope.launch {
+            val t = TimeSync.today()
+            if (t != selectedDate) {
+                selectedDate = t
+                binding.edDate.setText(selectedDate.toString())
+            }
+        }
         binding.edDate.setOnClickListener {
             val dp = android.app.DatePickerDialog(
                 this,

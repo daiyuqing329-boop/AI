@@ -14,6 +14,7 @@ import com.example.gongdijigong.data.MoneyCalc
 import com.example.gongdijigong.data.WorkRecord
 import com.example.gongdijigong.databinding.ActivityCalendarBinding
 import com.example.gongdijigong.databinding.ItemCalendarDayBinding
+import com.example.gongdijigong.util.TimeSync
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.DayOfWeek
@@ -25,6 +26,7 @@ class CalendarActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCalendarBinding
     private val db by lazy { AppDatabase.get(this) }
     private var month: YearMonth = YearMonth.now()
+    private var today: LocalDate = LocalDate.now()
 
     private val cells = mutableListOf<LocalDate?>() // null = 空白格
     private val dayAmount = mutableMapOf<Long, BigDecimal>()
@@ -44,7 +46,12 @@ class CalendarActivity : AppCompatActivity() {
         binding.btnPrev.setOnClickListener { month = month.minusMonths(1); load() }
         binding.btnNext.setOnClickListener { month = month.plusMonths(1); load() }
 
-        load()
+        // 联网校准“今天”并定位到最新月份，刷新日历
+        lifecycleScope.launch {
+            today = TimeSync.today()
+            month = YearMonth.from(today)
+            load()
+        }
     }
 
     private fun load() {
@@ -133,7 +140,7 @@ class CalendarActivity : AppCompatActivity() {
                 b.tvDay.text = "${date.dayOfMonth}"
                 val amt = dayAmount[date.toEpochDay()]
                 b.tvAmount.text = if (amt != null && amt.signum() > 0) MoneyCalc.fmt(amt) else ""
-                if (date == LocalDate.now()) b.tvDay.setTextColor(Color.parseColor("#FF9800"))
+                if (date == today) b.tvDay.setTextColor(Color.parseColor("#FF9800"))
                 else b.tvDay.setTextColor(Color.parseColor("#222222"))
             }
             return b.root
