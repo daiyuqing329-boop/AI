@@ -53,11 +53,7 @@ class ProjectsActivity : AppCompatActivity() {
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
             if (existing != null && existing.overtimePrice.signum() > 0) setText(MoneyCalc.fmt(existing.overtimePrice))
         }
-        val hpw = android.widget.EditText(this).apply {
-            hint = "每工小时数（如 8）"
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
-            setText(MoneyCalc.fmt(existing?.hourPerWork ?: BigDecimal("8")))
-        }
+        val hpw = existing?.hourPerWork ?: BigDecimal("8")
         val rbPoint = android.widget.RadioButton(this).apply { text = "点工"; id = android.view.View.generateViewId() }
         val rbPackage = android.widget.RadioButton(this).apply { text = "包工"; id = android.view.View.generateViewId() }
         val rbTime = android.widget.RadioButton(this).apply { text = "计时"; id = android.view.View.generateViewId() }
@@ -71,7 +67,7 @@ class ProjectsActivity : AppCompatActivity() {
             else -> rbPoint.isChecked = true
         }
         val tip = android.widget.TextView(this).apply {
-            text = "工地记工模板：选择记工方式和工价，之后在该工地记工时自动带出。计时记工会按“每工小时数”自动折算成工数。"
+            text = "工地记工模板：选择记工方式和工价，之后在该工地记工时自动带出。计时记工时录入“几个工”，加班另填小时。"
             setTextSize(12f)
             setTextColor(0xFF888888.toInt())
         }
@@ -83,7 +79,6 @@ class ProjectsActivity : AppCompatActivity() {
             addView(typeGroup)
             addView(price)
             addView(otPrice)
-            addView(hpw)
         }
         AlertDialog.Builder(this)
             .setTitle(if (existing == null) "添加工地（设置记工模板）" else "编辑工地 / 模板")
@@ -98,14 +93,13 @@ class ProjectsActivity : AppCompatActivity() {
                 }
                 val up = MoneyCalc.parse(price.text.toString())
                 val otp = MoneyCalc.parse(otPrice.text.toString())
-                val h = MoneyCalc.parse(hpw.text.toString())
                 lifecycleScope.launch {
                     if (existing == null) {
                         db.projectDao().insert(
-                            Project(name = nm, boss = boss.text.toString().trim(), workType = wt, unitPrice = up, overtimePrice = otp, hourPerWork = h)
+                            Project(name = nm, boss = boss.text.toString().trim(), workType = wt, unitPrice = up, overtimePrice = otp, hourPerWork = hpw)
                         )
                     } else {
-                        db.projectDao().update(existing.id, nm, boss.text.toString().trim(), wt, up, otp, h, existing.note)
+                        db.projectDao().update(existing.id, nm, boss.text.toString().trim(), wt, up, otp, hpw, existing.note)
                     }
                     load()
                 }

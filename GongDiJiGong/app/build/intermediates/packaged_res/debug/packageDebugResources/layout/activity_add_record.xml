@@ -48,49 +48,25 @@
             android:clickable="true" />
 
         <TextView
+            android:id="@+id/tvWorkType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="记工方式"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
             android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rgType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/typePoint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="点工" />
-
-            <RadioButton
-                android:id="@+id/typePackage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="包工" />
-
-            <RadioButton
-                android:id="@+id/typeTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="计时" />
-        </RadioGroup>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="工时/工量"
+            android:text="记工数量（工数/工程量）"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="例如 1 天 / 8 小时 / 100 平方"
             android:inputType="numberDecimal" />
 
         <TextView
@@ -111,21 +87,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="加班工时(可选)"
+            android:text="加班几小时（可选）"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edOtHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="0"
+            android:hint="如 2"
             android:inputType="numberDecimal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="加班工价(元，可选)"
+            android:text="加班工价（元/小时，可选）"
             android:textStyle="bold" />
 
         <EditText

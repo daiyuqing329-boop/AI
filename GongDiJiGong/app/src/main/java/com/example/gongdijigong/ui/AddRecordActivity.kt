@@ -25,9 +25,8 @@ class AddRecordActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.get(this) }
     private val projects = mutableListOf<Project>()
     private var selectedProjectId = 0L
-    private var hourPerWork = BigDecimal("8")
+    private var currentType = WorkType.POINT
     private var selectedDate: LocalDate = LocalDate.now()
-    private var loadingProjects = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +40,7 @@ class AddRecordActivity : AppCompatActivity() {
 
         binding.spProject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, pos: Int, id: Long) {
-                if (pos in projects.indices) {
-                    applyTemplate(projects[pos])
-                }
+                if (pos in projects.indices) applyTemplate(projects[pos])
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -55,14 +52,12 @@ class AddRecordActivity : AppCompatActivity() {
                 android.R.layout.simple_spinner_item,
                 projects.map { it.name }
             )
-            // 优先用传入的工地；否则默认选上次使用的工地
             var sel = projects.indexOfFirst { it.id == presetId }
             if (sel < 0) sel = projects.indexOfFirst { it.id == lastProjectId }
             if (sel < 0 && projects.isNotEmpty()) sel = 0
             if (sel >= 0) binding.spProject.setSelection(sel)
         }
 
-        binding.typePoint.isChecked = true
         binding.edDate.setText(selectedDate.toString())
         binding.edDate.setOnClickListener {
             val dp = android.app.DatePickerDialog(
@@ -83,60 +78,44 @@ class AddRecordActivity : AppCompatActivity() {
         binding.edUnitPrice.addTextChangedListener(watcher)
         binding.edOtHours.addTextChangedListener(watcher)
         binding.edOtPrice.addTextChangedListener(watcher)
-        binding.rgType.setOnCheckedChangeListener { _, _ -> updatePreview() }
 
         binding.btnSave.setOnClickListener { save() }
     }
 
     private fun prefs(): SharedPreferences = getSharedPreferences("hongzhizhao", MODE_PRIVATE)
 
-    /** 从工地模板自动带出：记工方式、工价、加班工价、每工小时数。 */
+    /** 使用工地模板固定的记工方式；工数/工价/加班工价自动带出。 */
     private fun applyTemplate(p: Project) {
         selectedProjectId = p.id
-        hourPerWork = p.hourPerWork
-        when (p.workType) {
-            WorkType.PACKAGE -> binding.typePackage.isChecked = true
-            WorkType.TIME -> binding.typeTime.isChecked = true
-            else -> binding.typePoint.isChecked = true
+        currentType = p.workType
+        val unitText = when (currentType) {
+            WorkType.PACKAGE -> "工程量"
+            WorkType.TIME -> "工（个）"
+            else -> "工（个）"
+        }
+        binding.tvWorkType.text = "本工地记工方式：${currentType.label}（录$unitText）"
+        binding.edHours.hint = when (currentType) {
+            WorkType.PACKAGE -> "如 100（平方/件）"
+            WorkType.TIME -> "如 1 或 1.5（个工）"
+            else -> "如 1 或 1.5（个工）"
         }
         if (p.unitPrice.signum() > 0) binding.edUnitPrice.setText(MoneyCalc.fmt(p.unitPrice))
         if (p.overtimePrice.signum() > 0) binding.edOtPrice.setText(MoneyCalc.fmt(p.overtimePrice))
         updatePreview()
     }
 
-    private fun isTimeType(): Boolean = selectedType() == WorkType.TIME
-
-    /** 按记工方式计算金额：计时按“每工小时数”折算成工数后×工价。 */
-    private fun calcAmount(hours: BigDecimal, price: BigDecimal, otH: BigDecimal, otP: BigDecimal): BigDecimal =
-        if (isTimeType()) {
-            MoneyCalc.add(
-                MoneyCalc.mul(MoneyCalc.toWorkCount(hours, hourPerWork), price),
-                MoneyCalc.mul(MoneyCalc.toWorkCount(otH, hourPerWork), otP)
-            )
-        } else {
-            MoneyCalc.recordAmount(hours, price, otH, otP)
-        }
-
+    /**
+     * 金额 = 工数(或工程量)×工价 + 加班几小时×加班工价。
+     * 加班按小时计（加班工价 = 元/小时）。
+     */
     private fun updatePreview() {
         val hours = MoneyCalc.parse(binding.edHours.text.toString())
         val price = MoneyCalc.parse(binding.edUnitPrice.text.toString())
         val otH = MoneyCalc.parse(binding.edOtHours.text.toString())
         val otP = MoneyCalc.parse(binding.edOtPrice.text.toString())
-        val amount = calcAmount(hours, price, otH, otP)
-        if (isTimeType()) {
-            val work = MoneyCalc.fmt(MoneyCalc.toWorkCount(hours, hourPerWork))
-            binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元（$work 工）"
-        } else {
-            binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元"
-        }
+        val amount = MoneyCalc.recordAmount(hours, price, otH, otP)
+        binding.tvAmountPreview.text = "金额：${MoneyCalc.fmt(amount)} 元"
     }
-
-    private fun selectedType(): WorkType =
-        when (binding.rgType.checkedRadioButtonId) {
-            binding.typePackage.id -> WorkType.PACKAGE
-            binding.typeTime.id -> WorkType.TIME
-            else -> WorkType.POINT
-        }
 
     private fun save() {
         if (projects.isEmpty()) {
@@ -147,17 +126,17 @@ class AddRecordActivity : AppCompatActivity() {
         val hours = MoneyCalc.parse(binding.edHours.text.toString())
         val price = MoneyCalc.parse(binding.edUnitPrice.text.toString())
         if (hours.signum() <= 0 || price.signum() <= 0) {
-            Toast.makeText(this, "请填写工时/工量和工价", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "请填写记工数量和工价", Toast.LENGTH_SHORT).show()
             return
         }
         val otH = MoneyCalc.parse(binding.edOtHours.text.toString())
         val otP = MoneyCalc.parse(binding.edOtPrice.text.toString())
-        val amount = calcAmount(hours, price, otH, otP)
+        val amount = MoneyCalc.recordAmount(hours, price, otH, otP)
 
         val record = WorkRecord(
             projectId = selectedProjectId,
             date = selectedDate.toEpochDay(),
-            workType = selectedType(),
+            workType = currentType,
             hours = hours,
             unitPrice = price,
             amount = amount,

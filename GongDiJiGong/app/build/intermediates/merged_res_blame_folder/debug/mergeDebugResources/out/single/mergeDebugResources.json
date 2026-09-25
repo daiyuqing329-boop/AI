@@ -16,10 +16,6 @@
         "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/item_project.xml"
     },
     {
-        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_calendar.xml.flat",
-        "source": "com.example.gongdijigong.app-main-41:/layout/activity_calendar.xml"
-    },
-    {
         "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/layout_activity_stats.xml.flat",
         "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/activity_stats.xml"
     },
@@ -28,8 +24,8 @@
         "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/activity_records.xml"
     },
     {
-        "merged": "com.example.gongdijigong.app-debug-39:/drawable_ic_launcher.xml.flat",
-        "source": "com.example.gongdijigong.app-main-41:/drawable/ic_launcher.xml"
+        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_add_record.xml.flat",
+        "source": "com.example.gongdijigong.app-main-41:/layout/activity_add_record.xml"
     },
     {
         "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/drawable_ic_launcher.xml.flat",
@@ -44,24 +40,20 @@
         "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/activity_borrow.xml"
     },
     {
-        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_main.xml.flat",
-        "source": "com.example.gongdijigong.app-main-41:/layout/activity_main.xml"
-    },
-    {
         "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/layout_item_record.xml.flat",
         "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/item_record.xml"
-    },
-    {
-        "merged": "com.example.gongdijigong.app-debug-39:/layout_activity_stats.xml.flat",
-        "source": "com.example.gongdijigong.app-main-41:/layout/activity_stats.xml"
     },
     {
         "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/drawable_bg_card.xml.flat",
         "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/drawable/bg_card.xml"
     },
     {
-        "merged": "com.example.gongdijigong.app-debug-39:/layout_item_calendar_day.xml.flat",
-        "source": "com.example.gongdijigong.app-main-41:/layout/item_calendar_day.xml"
+        "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/layout_item_calendar_day.xml.flat",
+        "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/item_calendar_day.xml"
+    },
+    {
+        "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/layout_activity_calendar.xml.flat",
+        "source": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-main-41:/layout/activity_calendar.xml"
     },
     {
         "merged": "/root/.gradle/daemon/8.14.5/com.example.gongdijigong.app-debug-39:/layout_item_borrow.xml.flat",

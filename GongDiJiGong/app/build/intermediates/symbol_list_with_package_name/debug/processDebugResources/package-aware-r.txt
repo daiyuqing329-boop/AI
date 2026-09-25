@@ -3470,7 +3470,6 @@ id ratio
 id rectangles
 id report_drawn
 id reverseSawtooth
-id rgType
 id right
 id rightToLeft
 id right_icon
@@ -3594,6 +3593,7 @@ id tvMonth
 id tvMonthHours
 id tvMonthTotal
 id tvPreview
+id tvWorkType
 id tv_amount
 id tv_borrow
 id tv_boss
@@ -3608,9 +3608,6 @@ id tv_summary
 id tv_total
 id tv_type
 id tv_unsettled
-id typePackage
-id typePoint
-id typeTime
 id unchecked
 id uniform
 id unlabeled

@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,9 +45,6 @@ public final class ActivityAddRecordBinding implements ViewBinding {
   public final EditText edUnitPrice;
 
   @NonNull
-  public final RadioGroup rgType;
-
-  @NonNull
   public final Spinner spProject;
 
   @NonNull
@@ -59,20 +54,13 @@ public final class ActivityAddRecordBinding implements ViewBinding {
   public final TextView tvAmountPreview;
 
   @NonNull
-  public final RadioButton typePackage;
-
-  @NonNull
-  public final RadioButton typePoint;
-
-  @NonNull
-  public final RadioButton typeTime;
+  public final TextView tvWorkType;
 
   private ActivityAddRecordBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnSave,
       @NonNull EditText edDate, @NonNull EditText edHours, @NonNull EditText edNote,
       @NonNull EditText edOtHours, @NonNull EditText edOtPrice, @NonNull EditText edUnitPrice,
-      @NonNull RadioGroup rgType, @NonNull Spinner spProject, @NonNull MaterialToolbar toolbar,
-      @NonNull TextView tvAmountPreview, @NonNull RadioButton typePackage,
-      @NonNull RadioButton typePoint, @NonNull RadioButton typeTime) {
+      @NonNull Spinner spProject, @NonNull MaterialToolbar toolbar,
+      @NonNull TextView tvAmountPreview, @NonNull TextView tvWorkType) {
     this.rootView = rootView;
     this.btnSave = btnSave;
     this.edDate = edDate;
@@ -81,13 +69,10 @@ public final class ActivityAddRecordBinding implements ViewBinding {
     this.edOtHours = edOtHours;
     this.edOtPrice = edOtPrice;
     this.edUnitPrice = edUnitPrice;
-    this.rgType = rgType;
     this.spProject = spProject;
     this.toolbar = toolbar;
     this.tvAmountPreview = tvAmountPreview;
-    this.typePackage = typePackage;
-    this.typePoint = typePoint;
-    this.typeTime = typeTime;
+    this.tvWorkType = tvWorkType;
   }
 
   @Override
@@ -159,12 +144,6 @@ public final class ActivityAddRecordBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.rgType;
-      RadioGroup rgType = ViewBindings.findChildViewById(rootView, id);
-      if (rgType == null) {
-        break missingId;
-      }
-
       id = R.id.spProject;
       Spinner spProject = ViewBindings.findChildViewById(rootView, id);
       if (spProject == null) {
@@ -183,27 +162,14 @@ public final class ActivityAddRecordBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.typePackage;
-      RadioButton typePackage = ViewBindings.findChildViewById(rootView, id);
-      if (typePackage == null) {
-        break missingId;
-      }
-
-      id = R.id.typePoint;
-      RadioButton typePoint = ViewBindings.findChildViewById(rootView, id);
-      if (typePoint == null) {
-        break missingId;
-      }
-
-      id = R.id.typeTime;
-      RadioButton typeTime = ViewBindings.findChildViewById(rootView, id);
-      if (typeTime == null) {
+      id = R.id.tvWorkType;
+      TextView tvWorkType = ViewBindings.findChildViewById(rootView, id);
+      if (tvWorkType == null) {
         break missingId;
       }
 
       return new ActivityAddRecordBinding((ScrollView) rootView, btnSave, edDate, edHours, edNote,
-          edOtHours, edOtPrice, edUnitPrice, rgType, spProject, toolbar, tvAmountPreview,
-          typePackage, typePoint, typeTime);
+          edOtHours, edOtPrice, edUnitPrice, spProject, toolbar, tvAmountPreview, tvWorkType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

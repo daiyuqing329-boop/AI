@@ -21,7 +21,6 @@ class RecordsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecordsBinding
     private val db by lazy { AppDatabase.get(this) }
     private var projectId = 0L
-    private var projectHourPerWork = java.math.BigDecimal("8")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +48,6 @@ class RecordsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             binding.tvUnsettled.text = MoneyCalc.fmt(db.workRecordDao().sumUnsettled(projectId))
             binding.tvTotal.text = MoneyCalc.fmt(db.workRecordDao().sumAll(projectId))
-            projectHourPerWork = db.projectDao().getById(projectId)?.hourPerWork ?: java.math.BigDecimal("8")
             (binding.rv.adapter as Adapter).submit(db.workRecordDao().getAllByProject(projectId))
         }
     }
@@ -76,13 +74,9 @@ class RecordsActivity : AppCompatActivity() {
             h.b.tvType.text = r.workType.label
             h.b.tvSettled.text = if (r.settled) "已结" else "未结"
             h.b.tvSettled.setBackgroundColor(getColor(if (r.settled) R.color.primary else R.color.accent))
-            h.b.tvAmount.text = if (r.workType == com.example.gongdijigong.data.WorkType.TIME && projectHourPerWork.signum() > 0) {
-                "${MoneyCalc.fmt(r.hours)}小时 ≈ ${MoneyCalc.fmt(MoneyCalc.toWorkCount(r.hours, projectHourPerWork))}工 × ${MoneyCalc.fmt(r.unitPrice)}元 = ${MoneyCalc.fmt(r.amount)}元"
-            } else {
-                "${MoneyCalc.fmt(r.hours)} × ${MoneyCalc.fmt(r.unitPrice)} 元 = ${MoneyCalc.fmt(r.amount)} 元"
-            }
+            h.b.tvAmount.text = "${MoneyCalc.fmt(r.hours)} × ${MoneyCalc.fmt(r.unitPrice)} 元 = ${MoneyCalc.fmt(r.amount)} 元"
             h.b.tvOvertime.text = if (r.overtimeHours.signum() > 0) {
-                "加班 ${MoneyCalc.fmt(r.overtimeHours)} × ${MoneyCalc.fmt(r.overtimePrice)} 元"
+                "加班 ${MoneyCalc.fmt(r.overtimeHours)} 小时 × ${MoneyCalc.fmt(r.overtimePrice)} 元/时"
             } else ""
             h.b.tvNote.text = r.note
             h.b.root.setOnClickListener {
